@@ -23,6 +23,9 @@ const useStyles = makeStyles(theme => ({
   root: {
     minHeight: "100vh",
     flexGrow: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "stretch",
     backgroundColor: theme.colour.snow,
   },
   appBar: {
@@ -42,26 +45,17 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     padding: theme.spacing(1),
   },
-  routeContainer: ({ navDrawerOpen, drawerWidth }) => ({
+  routeContainer: {
     boxSizing: "border-box",
-    flexGrow: 1,
-    height: "100%",
-    paddingLeft: navDrawerOpen
-      ? theme.spacing(3) + drawerWidth
-      : theme.spacing(3),
-  }),
+  },
 }));
 
 const App = () => {
   const theme = useTheme();
+  const classes = useStyles();
 
   const [navDrawerOpen, setNavDrawerOpen] = React.useState(false);
   const handleDrawerToggle = () => setNavDrawerOpen(!navDrawerOpen);
-
-  const classes = useStyles({
-    drawerWidth: theme.navDrawerWidth,
-    navDrawerOpen,
-  });
 
   const isMinSmScreen = useMediaQuery(theme.breakpoints.up("sm"));
   useEffect(() => {

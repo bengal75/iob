@@ -5,6 +5,29 @@ import useIob from "../helpers/useIob";
 
 const useStyles = makeStyles(theme => ({
   toolbar: theme.mixins.toolbar,
+  pageContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
+    textAlign: "center",
+  },
+  iobAmount: {
+    fontSize: "8rem",
+    lineHeight: 1,
+    margin: 0,
+  },
+  iobUnits: {
+    fontSize: "2rem",
+    lineHeight: 1,
+    margin: theme.spacing(1, 0),
+  },
+  timeRemaining: {
+    fontSize: "1rem",
+    lineHeight: 1,
+    margin: theme.spacing(3, 0),
+  },
 }));
 
 const HomePage = () => {
@@ -18,11 +41,13 @@ const HomePage = () => {
         ).padStart(2, "0")}`;
 
   return (
-    <Grid>
+    <Grid className={classes.pageContainer}>
       <div className={classes.toolbar} />
-      <h1>Home</h1>
-      <pre>{`${iob ? iob.toFixed(1) : 0} units on board`}</pre>
-      {timeRemaining && <pre>{`${timeRemaining} remaining`}</pre>}
+      <p className={classes.iobAmount}>{iob ? iob.toFixed(1) : 0}</p>
+      <p className={classes.iobUnits}>units on board</p>
+      {timeRemaining && (
+        <p className={classes.timeRemaining}>{`${timeRemaining} remaining`}</p>
+      )}
     </Grid>
   );
 };

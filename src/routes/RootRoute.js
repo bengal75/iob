@@ -6,10 +6,6 @@ import RouteMapper from "./RouteMapper";
 
 const routes = [
   {
-    path: "/home",
-    render: ({ match }) => <HomePage />,
-  },
-  {
     path: "/doses",
     render: ({ match }) => <DosesPage />,
   },
@@ -17,10 +13,18 @@ const routes = [
     path: "/settings",
     render: ({ match }) => <SettingsPage />,
   },
+  {
+    path: "/home",
+    render: ({ match }) => <HomePage />,
+  },
+  {
+    path: "/",
+    render: ({ match }) => <HomePage />,
+  },
 ];
 
 const RootRoute = ({ match }) => (
-  <RouteMapper routes={routes} rootPath={match.path} defaultRoute="/home" />
+  <RouteMapper routes={routes} rootPath={match.path} defaultRoute="/" />
 );
 
 export default RootRoute;

@@ -7,11 +7,12 @@ import AddToHomeScreen from "./AddToHomeScreen";
 import HomeIcon from "@material-ui/icons/Home";
 import ListIcon from "@material-ui/icons/ViewList";
 import SettingsIcon from "@material-ui/icons/Settings";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => ({
-  drawer: ({ drawerWidth }) => ({
-    width: drawerWidth,
+  drawer: ({ drawerWidth, open }) => ({
+    width: open ? drawerWidth : 0,
     flexShrink: 0,
   }),
   drawerPaper: ({ drawerWidth }) => ({
@@ -21,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const navItems = [
-  { primary: "Home", secondary: "", icon: <HomeIcon />, to: "/" },
+  { primary: "Home", secondary: "", icon: <HomeIcon />, to: "/home" },
   { primary: "Doses", secondary: "", icon: <ListIcon />, to: "/doses" },
   {
     primary: "Settings",
@@ -32,8 +33,10 @@ const navItems = [
 ];
 
 const NavigationDrawer = ({ drawerWidth, open, toggle }) => {
-  const classes = useStyles({ drawerWidth });
+  const classes = useStyles({ drawerWidth, open });
   const theme = useTheme();
+  const isMinSmScreen = useMediaQuery(theme.breakpoints.up("sm"));
+  const toggler = isMinSmScreen ? undefined : toggle;
 
   return (
     <nav className={classes.drawer} aria-label="navigation menu">
@@ -50,7 +53,7 @@ const NavigationDrawer = ({ drawerWidth, open, toggle }) => {
         <Divider />
         <List>
           {navItems.map(item => (
-            <ListItemLink {...item} key={item.primary} />
+            <ListItemLink {...item} key={item.primary} toggler={toggler} />
           ))}
         </List>
         <AddToHomeScreen />
