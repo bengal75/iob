@@ -1,9 +1,10 @@
+import { useState } from "react";
 import useInsulinParams from "./useInsulinParameters";
 import useInsulinDoses from "./useInsulinDoses";
+import useInterval from "./useInterval";
 
 const iobCalcExponential = (insulinUnits, minsAgo, end, peak) => {
   // Adapted from https://github.com/openaps/oref0/blob/dev/lib/iob/calculate.js
-
   if (minsAgo > end) return 0;
   if (peak > 100) peak = 100;
   if (peak < 35) peak = 35;
@@ -28,10 +29,14 @@ const useIob = () => {
   const { insulinParams } = useInsulinParams();
   const { insulinDoses } = useInsulinDoses();
 
+  const [now, setNow] = useState(new Date());
+  useInterval(() => setNow(new Date()), 60 * 1000);
+
   const iob = insulinDoses.reduce((accumulator, insulinDose) => {
-    const minsAgo = (new Date() - insulinDose.timestamp) / 1000 / 60;
+    const minsAgo = (now - insulinDose.timestamp) / 1000 / 60;
+    console.log(insulinDose.timestamp, minsAgo);
     const doseIobContrib = iobCalcExponential(
-      insulinDose.units,
+      Number(insulinDose.units),
       minsAgo,
       insulinParams.durationOfInsulinActivity * 60,
       insulinParams.peak
@@ -46,8 +51,9 @@ const useIob = () => {
     mostRecentInsulinTimestamp.getMinutes() +
       insulinParams.durationOfInsulinActivity * 60
   );
-  const timeRemainingInMinutes =
-    (mostRecentInsulinActionEnd - new Date()) / 1000 / 60;
+  const timeRemainingInMinutes = (mostRecentInsulinActionEnd - now) / 1000 / 60;
+
+  console.log(`Calculated IOB as ${iob} units`);
 
   return { iob, timeRemainingInMinutes };
 };

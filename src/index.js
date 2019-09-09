@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
@@ -26,13 +28,28 @@ const theme = createMuiTheme({
   navDrawerWidth: 240,
 });
 
-ReactDOM.render(
-  <BrowserRouter>
-    <CssBaseline />
-    <MuiThemeProvider theme={theme}>
-      <App />
-    </MuiThemeProvider>
-  </BrowserRouter>,
-  document.getElementById("root")
-);
+const listenForPromptEvent = updateDeferredPrompt => {
+  window.addEventListener("beforeinstallprompt", e => {
+    e.preventDefault();
+    // Stash the event so it can be triggered later.
+    updateDeferredPrompt(e);
+  });
+};
+
+const WrappedApp = () => {
+  const [deferredPrompt, updateDeferredPrompt] = useState(null);
+  useEffect(() => listenForPromptEvent(updateDeferredPrompt), []);
+  return (
+    <BrowserRouter>
+      <CssBaseline />
+      <MuiThemeProvider theme={theme}>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <App installEvent={{ deferredPrompt, updateDeferredPrompt }} />
+        </MuiPickersUtilsProvider>
+      </MuiThemeProvider>
+    </BrowserRouter>
+  );
+};
+
+ReactDOM.render(<WrappedApp />, document.getElementById("root"));
 serviceWorker.register();

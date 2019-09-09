@@ -1,10 +1,10 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
+import DoseAddDialog from "../components/DoseAddDialog";
 import { makeStyles } from "@material-ui/core/styles";
 import useIob from "../helpers/useIob";
 
 const useStyles = makeStyles(theme => ({
-  toolbar: theme.mixins.toolbar,
   pageContainer: {
     display: "flex",
     flexDirection: "column",
@@ -42,12 +42,12 @@ const HomePage = () => {
 
   return (
     <Grid className={classes.pageContainer}>
-      <div className={classes.toolbar} />
       <p className={classes.iobAmount}>{iob ? iob.toFixed(1) : 0}</p>
       <p className={classes.iobUnits}>units on board</p>
       {timeRemaining && (
         <p className={classes.timeRemaining}>{`${timeRemaining} remaining`}</p>
       )}
+      <DoseAddDialog />
     </Grid>
   );
 };

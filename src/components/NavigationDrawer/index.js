@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const navItems = [
-  { primary: "Home", secondary: "", icon: <HomeIcon />, to: "/home" },
+  { primary: "Home", secondary: "", icon: <HomeIcon />, to: "/" },
   { primary: "Doses", secondary: "", icon: <ListIcon />, to: "/doses" },
   {
     primary: "Settings",
@@ -32,7 +32,7 @@ const navItems = [
   },
 ];
 
-const NavigationDrawer = ({ drawerWidth, open, toggle }) => {
+const NavigationDrawer = ({ drawerWidth, open, toggle, installEvent }) => {
   const classes = useStyles({ drawerWidth, open });
   const theme = useTheme();
   const isMinSmScreen = useMediaQuery(theme.breakpoints.up("sm"));
@@ -56,7 +56,7 @@ const NavigationDrawer = ({ drawerWidth, open, toggle }) => {
             <ListItemLink {...item} key={item.primary} toggler={toggler} />
           ))}
         </List>
-        <AddToHomeScreen />
+        <AddToHomeScreen installEvent={installEvent} />
       </Drawer>
     </nav>
   );

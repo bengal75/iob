@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const App = () => {
+const App = ({ installEvent }) => {
   const theme = useTheme();
   const classes = useStyles();
 
@@ -85,6 +85,7 @@ const App = () => {
         drawerWidth={theme.navDrawerWidth}
         open={navDrawerOpen}
         toggle={handleDrawerToggle}
+        installEvent={installEvent}
       />
       <Container className={classes.routeContainer}>
         <RouteMapper routes={routes} defaultRoute="/" />

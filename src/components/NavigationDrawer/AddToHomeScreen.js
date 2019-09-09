@@ -6,19 +6,29 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
 import AddToHomeScreenIcon from "@material-ui/icons/AddToHomeScreen";
 
-const AddToHomeScreen = () => {
+const AddToHomeScreen = ({ installEvent }) => {
+  const install = () => {
+    installEvent.deferredPrompt.prompt();
+    installEvent.updateDeferredPrompt(null);
+  };
+  const isRunningStandalone =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
   return (
-    <>
-      <Divider />
-      <List>
-        <ListItem button>
-          <ListItemIcon>
-            <AddToHomeScreenIcon />
-          </ListItemIcon>
-          <ListItemText primary="Install as an app" />
-        </ListItem>
-      </List>
-    </>
+    !isRunningStandalone &&
+    installEvent.deferredPrompt && (
+      <>
+        <Divider />
+        <List>
+          <ListItem button onClick={install}>
+            <ListItemIcon>
+              <AddToHomeScreenIcon />
+            </ListItemIcon>
+            <ListItemText primary="Install as an app" />
+          </ListItem>
+        </List>
+      </>
+    )
   );
 };
 
