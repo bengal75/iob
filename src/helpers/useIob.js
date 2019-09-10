@@ -34,7 +34,6 @@ const useIob = () => {
 
   const iob = insulinDoses.reduce((accumulator, insulinDose) => {
     const minsAgo = (now - insulinDose.timestamp) / 1000 / 60;
-    console.log(insulinDose.timestamp, minsAgo);
     const doseIobContrib = iobCalcExponential(
       Number(insulinDose.units),
       minsAgo,

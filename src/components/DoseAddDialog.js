@@ -28,6 +28,10 @@ const useStyles = makeStyles(theme => ({
     fontSize: "small",
     color: theme.colour.slateBlue,
   },
+  timeIsNowSwitch: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 const DoseAddDialog = () => {
@@ -61,6 +65,10 @@ const DoseAddDialog = () => {
     if (isFuture(doseEntry.timestamp)) {
       setTimeError(true);
       return false;
+    }
+    if (timeIsNow) {
+      setNow(new Date());
+      handleDateChange(now);
     }
     addInsulinDose(doseEntry);
     handleCancelButtonClick();
@@ -128,23 +136,23 @@ const DoseAddDialog = () => {
             labelPlacement="end"
             name="timeIsNowSwitch"
             onChange={handleTimeIsNowSwitch}
+            className={classes.timeIsNowSwitch}
           />
-          {!timeIsNow && (
-            <DateTimePicker
-              variant="outlined"
-              label="Time of injection"
-              value={doseEntry.timestamp}
-              onChange={handleDateChange}
-              fullWidth
-              ampm={false}
-              autoOk={true}
-              disableFuture={true}
-              format="HH:mm, EEEE do MMMM yyyy"
-              openTo="hours"
-              showTodayButton={true}
-              error={timeError}
-            />
-          )}
+          <DateTimePicker
+            disabled={timeIsNow}
+            inputVariant="outlined"
+            label="Time of injection"
+            value={doseEntry.timestamp}
+            onChange={handleDateChange}
+            fullWidth
+            ampm={false}
+            autoOk={true}
+            disableFuture={true}
+            format="HH:mm, EEEE do MMMM yyyy"
+            openTo="hours"
+            showTodayButton={true}
+            error={timeError}
+          />
           {timeError && !timeIsNow && (
             <p className={classes.errorMessage}>
               The time of the injection cannot be in the future.
