@@ -4,7 +4,7 @@ const useParamsState = createPersistedState("insulinParameters");
 
 const useInsulinParams = () => {
   const [insulinParams, setInsulinParams] = useParamsState({
-    durationOfInsulinActivity: 4.5, // hours
+    durationOfInsulinActivity: 4.25, // hours
     peak: 75, // minutes
   });
   return { insulinParams, setInsulinParams };
