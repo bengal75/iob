@@ -2,6 +2,7 @@ import { useState } from "react";
 import useInsulinParams from "./useInsulinParameters";
 import useInsulinDoses from "./useInsulinDoses";
 import useInterval from "./useInterval";
+import { calculateActionEnd, timeToNowInMinutes } from "./calculateTimes";
 
 const iobCalcExponential = (insulinUnits, minsAgo, end, peak) => {
   // Adapted from https://github.com/openaps/oref0/blob/dev/lib/iob/calculate.js
@@ -46,17 +47,22 @@ const useIob = () => {
   const mostRecentInsulinTimestamp = new Date(
     Math.max(...insulinDoses.map(dose => dose.timestamp))
   );
-  const mostRecentInsulinActionEnd = new Date(
-    mostRecentInsulinTimestamp
-  ).setMinutes(
-    mostRecentInsulinTimestamp.getMinutes() +
-      insulinParams.durationOfInsulinActivity * 60
+  const mostRecentInsulinActionEnd = calculateActionEnd(
+    mostRecentInsulinTimestamp,
+    insulinParams.durationOfInsulinActivity * 60
   );
-  const timeRemainingInMinutes = (mostRecentInsulinActionEnd - now) / 1000 / 60;
-  const mostRecentInsulinActionPeak = new Date(
-    mostRecentInsulinTimestamp
-  ).setMinutes(mostRecentInsulinTimestamp.getMinutes() + insulinParams.peak);
-  const timeToPeakInMinutes = (mostRecentInsulinActionPeak - now) / 1000 / 60;
+  const timeRemainingInMinutes = timeToNowInMinutes(
+    mostRecentInsulinActionEnd,
+    now
+  );
+  const mostRecentInsulinActionPeak = calculateActionEnd(
+    mostRecentInsulinTimestamp,
+    insulinParams.peak
+  );
+  const timeToPeakInMinutes = timeToNowInMinutes(
+    mostRecentInsulinActionPeak,
+    now
+  );
 
   return { iob, timeRemainingInMinutes, timeToPeakInMinutes };
 };

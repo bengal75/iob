@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const DoseAddDialog = ({ lastPeakInFuture }) => {
+const DoseAddDialog = ({ timeToPeakInMinutes }) => {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -56,6 +56,7 @@ const DoseAddDialog = ({ lastPeakInFuture }) => {
   const [timeError, setTimeError] = useState(false);
   const [timeIsNow, setTimeIsNow] = useState(true);
   const [saving, setSaving] = useState(false);
+  const lastPeakInFuture = timeToPeakInMinutes > 0;
 
   const handleCancelButtonClick = () => {
     setDoseEntry(defaultDose);
