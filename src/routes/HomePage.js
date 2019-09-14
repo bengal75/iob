@@ -26,19 +26,39 @@ const useStyles = makeStyles(theme => ({
   timeRemaining: {
     fontSize: "1rem",
     lineHeight: 1,
-    margin: theme.spacing(3, 0),
+    margin: theme.spacing(3, 0, 1, 0),
   },
+  timeToPeak: ({ isAtPeak, peakIsPast }) => ({
+    fontSize: "1rem",
+    lineHeight: 1,
+    margin: theme.spacing(0, 0, 3, 0),
+    color: isAtPeak
+      ? theme.colour.tartyRed
+      : peakIsPast
+      ? theme.colour.lightMossGreen
+      : theme.colour.copperOrange,
+  }),
 }));
 
+const minutesToHoursAndMinutes = minutes =>
+  `${Math.floor(minutes / 60)}:${String(Math.floor(minutes % 60)).padStart(
+    2,
+    "0"
+  )}`;
+
 const HomePage = () => {
-  const classes = useStyles();
-  const { iob, timeRemainingInMinutes } = useIob();
+  const { iob, timeRemainingInMinutes, timeToPeakInMinutes } = useIob();
   const timeRemaining =
     !timeRemainingInMinutes || timeRemainingInMinutes < 0
       ? null
-      : `${Math.floor(timeRemainingInMinutes / 60)}:${String(
-          Math.floor(timeRemainingInMinutes % 60)
-        ).padStart(2, "0")}`;
+      : minutesToHoursAndMinutes(timeRemainingInMinutes);
+  const isAtPeak = Math.abs(timeToPeakInMinutes) < 10;
+  const peakIsPast = timeToPeakInMinutes < 0;
+  const timeToPeak = timeRemaining
+    ? minutesToHoursAndMinutes(Math.abs(timeToPeakInMinutes))
+    : null;
+
+  const classes = useStyles({ isAtPeak, peakIsPast });
 
   return (
     <Grid className={classes.pageContainer}>
@@ -47,7 +67,18 @@ const HomePage = () => {
       {timeRemaining && (
         <p className={classes.timeRemaining}>{`${timeRemaining} remaining`}</p>
       )}
-      <DoseAddDialog />
+      {timeToPeak && (
+        <p className={classes.timeToPeak}>
+          {isAtPeak && peakIsPast
+            ? "Insulin action has just passed peak"
+            : isAtPeak
+            ? "Insulin action is approaching peak"
+            : peakIsPast
+            ? `${timeToPeak} since peak`
+            : `${timeToPeak} to peak`}
+        </p>
+      )}
+      <DoseAddDialog lastPeakInFuture={!peakIsPast} />
     </Grid>
   );
 };

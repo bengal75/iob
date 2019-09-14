@@ -28,13 +28,17 @@ const useStyles = makeStyles(theme => ({
     fontSize: "small",
     color: theme.colour.slateBlue,
   },
+  warningMessage: {
+    fontSize: "small",
+    color: theme.colour.tartyRed,
+  },
   timeIsNowSwitch: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(2),
   },
 }));
 
-const DoseAddDialog = () => {
+const DoseAddDialog = ({ lastPeakInFuture }) => {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -51,11 +55,13 @@ const DoseAddDialog = () => {
   const [unitsError, setUnitsError] = useState(false);
   const [timeError, setTimeError] = useState(false);
   const [timeIsNow, setTimeIsNow] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const handleCancelButtonClick = () => {
     setDoseEntry(defaultDose);
     setTimeIsNow(true);
     toggleOpen();
+    setSaving(false);
   };
   const handleAddButtonClick = () => {
     if (!doseEntry.units || doseEntry.units < 0) {
@@ -66,6 +72,7 @@ const DoseAddDialog = () => {
       setTimeError(true);
       return false;
     }
+    setSaving(true);
     timeIsNow
       ? addInsulinDose({ ...doseEntry, timestamp: new Date() })
       : addInsulinDose(doseEntry);
@@ -111,9 +118,16 @@ const DoseAddDialog = () => {
           <DialogContentText>
             Record a dose of insulin, either now or at a time you select.
           </DialogContentText>
+          {lastPeakInFuture && !saving && (
+            <p className={classes.warningMessage}>
+              <b>Heads up!</b> The last dose of insulin recorded has not yet
+              reached its peak action.
+            </p>
+          )}
           <TextField
             autoComplete="off"
             autoFocus
+            disabled={saving}
             error={unitsError}
             fullWidth
             id="units"
@@ -134,6 +148,7 @@ const DoseAddDialog = () => {
           <FormControlLabel
             checked={timeIsNow}
             control={<Switch color="primary" />}
+            disabled={saving}
             label="Taken now"
             labelPlacement="end"
             name="timeIsNowSwitch"
@@ -143,7 +158,7 @@ const DoseAddDialog = () => {
           {!timeIsNow && (
             <>
               <DateTimePicker
-                disabled={timeIsNow}
+                disabled={saving}
                 inputVariant="outlined"
                 label="Time of injection"
                 value={doseEntry.timestamp}
@@ -170,6 +185,7 @@ const DoseAddDialog = () => {
             onClick={handleCancelButtonClick}
             color="primary"
             variant="outlined"
+            disabled={saving}
           >
             Cancel
           </Button>
@@ -177,6 +193,7 @@ const DoseAddDialog = () => {
             onClick={handleAddButtonClick}
             color="primary"
             variant="contained"
+            disabled={saving}
           >
             Add
           </Button>

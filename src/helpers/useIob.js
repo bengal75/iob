@@ -46,15 +46,19 @@ const useIob = () => {
   const mostRecentInsulinTimestamp = new Date(
     Math.max(...insulinDoses.map(dose => dose.timestamp))
   );
-  const mostRecentInsulinActionEnd = mostRecentInsulinTimestamp.setMinutes(
+  const mostRecentInsulinActionEnd = new Date(
+    mostRecentInsulinTimestamp
+  ).setMinutes(
     mostRecentInsulinTimestamp.getMinutes() +
       insulinParams.durationOfInsulinActivity * 60
   );
   const timeRemainingInMinutes = (mostRecentInsulinActionEnd - now) / 1000 / 60;
+  const mostRecentInsulinActionPeak = new Date(
+    mostRecentInsulinTimestamp
+  ).setMinutes(mostRecentInsulinTimestamp.getMinutes() + insulinParams.peak);
+  const timeToPeakInMinutes = (mostRecentInsulinActionPeak - now) / 1000 / 60;
 
-  console.log(`Calculated IOB as ${iob} units`);
-
-  return { iob, timeRemainingInMinutes };
+  return { iob, timeRemainingInMinutes, timeToPeakInMinutes };
 };
 
 export default useIob;

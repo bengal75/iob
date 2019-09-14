@@ -16,6 +16,9 @@ const theme = createMuiTheme({
     toolbox: "#7c65ce",
     paleViolet: "#bdabfc",
     snow: "#fbfbfb",
+    lightMossGreen: "#bad9b5",
+    tartyRed: "#f44e5c",
+    copperOrange: "#cd724d",
   },
   palette: {
     primary: { main: "#504087" },
