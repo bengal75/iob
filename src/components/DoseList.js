@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(4),
   },
   doseCard: {
-    padding: theme.spacing(0, 1),
+    padding: theme.spacing(1),
   },
 }));
 
