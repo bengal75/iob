@@ -40,7 +40,7 @@ const DoseAddDialog = () => {
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [now, setNow] = useState(new Date());
-  useInterval(() => setNow(new Date()), 60 * 1000);
+  useInterval(() => setNow(new Date()), 30 * 1000);
 
   const { addInsulinDose } = useInsulinDoses();
   const defaultDose = { timestamp: now, units: "" };
@@ -85,6 +85,10 @@ const DoseAddDialog = () => {
     setTimeIsNow(!timeIsNow);
     if (timeIsNow) handleDateChange(now);
   };
+  const handleFabClick = () => {
+    toggleOpen();
+    setNow(new Date());
+  };
 
   return (
     <>
@@ -93,7 +97,7 @@ const DoseAddDialog = () => {
         size="large"
         aria-label="add insulin dose"
         className={classes.fab}
-        onClick={toggleOpen}
+        onClick={handleFabClick}
       >
         <AddIcon />
       </Fab>
