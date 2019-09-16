@@ -12,6 +12,7 @@ import DeleteIcon from "@material-ui/icons/DeleteForeverOutlined";
 import TimeDisplays from "./TimeDisplays";
 import { makeStyles } from "@material-ui/core/styles";
 import format from "date-fns/format";
+import pluralise from "../helpers/pluralise";
 import {
   calculateActionEnd,
   timeToNowInMinutes,
@@ -22,8 +23,6 @@ const useStyles = makeStyles(theme => ({
     opacity: expired ? 0.5 : 1,
   }),
 }));
-
-const pluralise = (number, word) => (number === 1 ? word : `${word}s`);
 
 const SingleDose = ({ dose, deleteDose, insulinParams, now }) => {
   const classes = useStyles({ expired: dose.expired });
