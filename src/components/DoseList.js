@@ -31,7 +31,7 @@ const DoseList = ({ type, doses, deleteDose, deleteAll }) => {
         <h2>{type} Doses</h2>
         {type === "Depleted" && (
           <Button variant="outlined" color="primary" onClick={deleteAll}>
-            Delete All
+            Remove All
           </Button>
         )}
       </Grid>
