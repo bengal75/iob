@@ -39,7 +39,10 @@ const NavigationDrawer = ({ drawerWidth, open, toggle, installEvent }) => {
   const toggler = isMinSmScreen ? undefined : toggle;
 
   return (
-    <nav className={classes.drawer} aria-label="navigation menu">
+    <nav
+      className={isMinSmScreen ? classes.drawer : ""}
+      aria-label="navigation menu"
+    >
       <Drawer
         variant="persistent"
         anchor={theme.direction === "rtl" ? "right" : "left"}
