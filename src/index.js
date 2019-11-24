@@ -5,6 +5,8 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
+import { NowProvider } from "./helpers/useNow";
+import useInterval from "./helpers/useInterval";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
@@ -42,12 +44,18 @@ const listenForPromptEvent = updateDeferredPrompt => {
 const WrappedApp = () => {
   const [deferredPrompt, updateDeferredPrompt] = useState(null);
   useEffect(() => listenForPromptEvent(updateDeferredPrompt), []);
+
+  const [now, setNow] = useState(new Date());
+  useInterval(() => setNow(new Date()), 30 * 1000);
+
   return (
     <BrowserRouter>
       <CssBaseline />
       <MuiThemeProvider theme={theme}>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <App installEvent={{ deferredPrompt, updateDeferredPrompt }} />
+          <NowProvider value={[now, setNow]}>
+            <App installEvent={{ deferredPrompt, updateDeferredPrompt }} />
+          </NowProvider>
         </MuiPickersUtilsProvider>
       </MuiThemeProvider>
     </BrowserRouter>

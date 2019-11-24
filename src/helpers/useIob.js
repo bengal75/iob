@@ -1,7 +1,6 @@
-import { useState } from "react";
 import useInsulinParams from "./useInsulinParameters";
 import useInsulinDoses from "./useInsulinDoses";
-import useInterval from "./useInterval";
+import useNow from "./useNow";
 import { calculateActionEnd, timeToNowInMinutes } from "./calculateTimes";
 
 const iobCalcExponential = (insulinUnits, minsAgo, end, peak) => {
@@ -30,8 +29,7 @@ const useIob = () => {
   const { insulinParams } = useInsulinParams();
   const { insulinDoses } = useInsulinDoses();
 
-  const [now, setNow] = useState(new Date());
-  useInterval(() => setNow(new Date()), 60 * 1000);
+  const [now] = useNow();
 
   const iob = insulinDoses.reduce((accumulator, insulinDose) => {
     const minsAgo = (now - insulinDose.timestamp) / 1000 / 60;

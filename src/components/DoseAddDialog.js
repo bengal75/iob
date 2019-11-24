@@ -13,7 +13,7 @@ import AddIcon from "@material-ui/icons/Add";
 import { DateTimePicker } from "@material-ui/pickers";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import useInterval from "../helpers/useInterval";
+import useNow from "../helpers/useNow";
 import useInsulinDoses from "../helpers/useInsulinDoses";
 import isFuture from "date-fns/isFuture";
 
@@ -43,8 +43,7 @@ const DoseAddDialog = ({ timeToPeakInMinutes }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [now, setNow] = useState(new Date());
-  useInterval(() => setNow(new Date()), 30 * 1000);
+  const [now, setNow] = useNow();
 
   const { addInsulinDose } = useInsulinDoses();
   const defaultDose = { timestamp: now, units: "" };
